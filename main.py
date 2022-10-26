@@ -1,9 +1,8 @@
 import pandas as pd
-import qrcode_test
+import qrcode
 
 df_game_list = pd.DataFrame(pd.read_excel("game_list.xlsx", sheet_name="game_list"))
-shopping_cart = []
-price_shopping_cart = []
+shopping_cart = {}
 
 
 def menu():
@@ -23,7 +22,7 @@ def menu():
     elif choice == 4:
         delete_product_shopping_cart()
     elif choice == 5:
-        payment()
+        qr_code_payment()
     elif choice == 6:
         exit()
     else:
@@ -45,14 +44,15 @@ def add_product_shopping_cart():
         print("ID not found, please try again")
         add_product_shopping_cart()
     else:
-        print(f"The product {df_game_list[add_shopping_cart]['Product']} has been added to your shopping cart")
-        shopping_cart.append(df_game_list[add_shopping_cart]['Product'])
-        print(shopping_cart)
+        print(f"The product {df_game_list.loc[add_shopping_cart]['Product']} has been added to your shopping cart")
+        shopping_cart[df_game_list.loc[add_shopping_cart]['ID']] = [df_game_list.loc[add_shopping_cart]['Product'],
+                                                                    df_game_list.loc[add_shopping_cart]['Price']]
         menu()
 
 
 def check_shopping_cart():
-    print(pd.DataFrame(shopping_cart))
+    print(shopping_cart)
+    menu()
 
 
 def delete_product_shopping_cart():
@@ -64,15 +64,26 @@ def delete_product_shopping_cart():
         print(f"The product of ID {id_to_delete} is not in your shopping cart, try again")
         delete_product_shopping_cart()
     else:
-        shopping_cart.remove(id_to_delete)
+        shopping_cart.pop(id_to_delete)
         menu()
 
 
-def payment():
+def qr_code_payment():
+    for key, value in shopping_cart.items():
+        for value_list in value:
+            print(value_list[1])
 
-    # Learn how to put the price of the spreadsheet in a QR Code
-
-    pass
-
+    """
+    print(f"The total value of your shop is US$ {total_value}, please procedere the payment with the QR Code bellow")
+    data = f'The total value is US$ {total_value},00'
+    qr = qrcode.QRCode(version=1, box_size=20, border=10)
+    qr.add_data(data)
+    img = qr.make_image(fill_color='red', back_color='white')
+    img.save('D:/One Drive/One Drive ANG/OneDrive - ANG/Arquivos '
+             'Vitor/curso_de_programacao/conquiste_sua_vaga/gaming_shop_with_QRCode')
+    print(img)
+    print("Tks for buy with us, see you soon")
+    exit()
+    """
 
 menu()
