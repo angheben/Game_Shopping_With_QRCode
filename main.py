@@ -1,8 +1,10 @@
 import pandas as pd
 import qrcode
+from pyzbar.pyzbar import decode
 
 df_game_list = pd.DataFrame(pd.read_excel("game_list.xlsx", sheet_name="game_list"))
 shopping_cart = {}
+list_price = []
 
 
 def menu():
@@ -69,21 +71,17 @@ def delete_product_shopping_cart():
 
 
 def qr_code_payment():
-    for key, value in shopping_cart.items():
-        for value_list in value:
-            print(value_list[1])
-
-    """
-    print(f"The total value of your shop is US$ {total_value}, please procedere the payment with the QR Code bellow")
-    data = f'The total value is US$ {total_value},00'
-    qr = qrcode.QRCode(version=1, box_size=20, border=10)
-    qr.add_data(data)
-    img = qr.make_image(fill_color='red', back_color='white')
+    for key, values in shopping_cart.items():
+        list_price.append(values[1])
+    x = sum(list_price)
+    print(f'Please, procede with the payment by this appointing your camera to this QR Code')
+    data = x
+    img = qrcode.QRCode(version=1, box_size=20, border=15)
+    img = qrcode.make(data)
     img.save('D:/One Drive/One Drive ANG/OneDrive - ANG/Arquivos '
-             'Vitor/curso_de_programacao/conquiste_sua_vaga/gaming_shop_with_QRCode')
-    print(img)
-    print("Tks for buy with us, see you soon")
+             'Vitor/curso_de_programacao/conquiste_sua_vaga/gaming_shop_with_QRCode/qrcode_payment.png')
+    print("Tks for shopping with us, enjoy your new games :D")
     exit()
-    """
+
 
 menu()
